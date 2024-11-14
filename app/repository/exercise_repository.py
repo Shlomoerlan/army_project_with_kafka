@@ -26,7 +26,8 @@ def get_most_common_words():
             words.extend(sentence.lower().split())
 
         words_rank = Counter(words).most_common()
-        return words_rank[0][0]
+        most_common_word, highest_frequency = max(words_rank, key=lambda x: x[1])
+        return most_common_word
 
 def create_user(user):
     user_data = {
