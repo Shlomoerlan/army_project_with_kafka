@@ -2,15 +2,14 @@ import json
 import os
 from dotenv import load_dotenv
 from kafka import KafkaConsumer
-
-from app.utils.createing_models import insert_user_data
+from app.utils.selector import insert_user
 
 load_dotenv(verbose=True)
 
 
 def process_to_sql(data):
     print(f"Processing: {data}")
-    insert_user_data(data, 'h')
+    insert_user(data)
 
 
 def consume_hostage():

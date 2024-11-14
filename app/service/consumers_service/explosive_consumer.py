@@ -2,14 +2,13 @@ import json
 import os
 from dotenv import load_dotenv
 from kafka import KafkaConsumer
-
-from app.utils.createing_models import insert_user_data
+from app.utils.selector import insert_user
 
 load_dotenv(verbose=True)
 
 def process_to_sql(data):
     print(f"Processing: {data}")
-    insert_user_data(data, 'e')
+    insert_user(data)
 
 
 def consume_explosive():
@@ -20,7 +19,8 @@ def consume_explosive():
         auto_offset_reset='earliest'
     )
     for msg in consumer:
-        process_to_sql(msg.value)
+        print(msg)
+        # process_to_sql(msg.value)
 
 if __name__ == '__main__':
     consume_explosive()

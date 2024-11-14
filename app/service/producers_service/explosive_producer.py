@@ -1,18 +1,15 @@
-import json
 import os
 from dotenv import load_dotenv
 from flask import Flask
-
 from app.service.producers_service import producer
-from app.utils.createing_models import json_serializer
 
 app = Flask(__name__)
 
 load_dotenv(verbose=True)
 
 def publish_explosive(data):
-    data = field_the_data(data)
-    producer.send(os.environ['TOPIC_EXPLOSIVE_NAMES'], json.dumps(data, default=json_serializer).encode('utf-8'))
+    # data = field_the_data(data)
+    producer.send(os.environ['TOPIC_EXPLOSIVE_NAMES'], data)
     # producer.send(os.environ['TOPIC_EXPLOSIVE_NAMES'], data)
     producer.flush()
     print("Processing explosive message")

@@ -2,7 +2,6 @@ import json
 import os
 from dotenv import load_dotenv
 from kafka import KafkaConsumer
-
 from app.repository.mongo_repository import insert_data_to_mongo
 
 load_dotenv(verbose=True)

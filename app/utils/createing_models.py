@@ -1,52 +1,43 @@
-from bson import ObjectId
-
-from app.db.database_psql import session_maker
-from app.db.models import User, Location, DeviceInfo, HostageSentence, ExplosiveSentence
+from app.db.models import HostageSentence, ExplosiveSentence, DeviceInfo, User, Location
 
 
-def insert_user_data(data: dict, sen: str):
-    with session_maker() as session:
-        user = User(
-            username=data['username'],
-            email=data['email'],
-            ip_address=data['ip_address'],
-            created_at=data['created_at']
-        )
-        session.add(user)
-        session.flush()
+def create_user(data):
+    return User(
+        username=data['username'],
+        email=data['email'],
+        ip_address=data['ip_address'],
+        created_at=data['created_at']
+    )
 
-        location_data = data.get('location', {})
-        location = Location(
-            user_id=user.id,
-            city=location_data.get('city'),
-            country=location_data.get('country'),
-            latitude=location_data.get('latitude'),
-            longitude=location_data.get('longitude')
-        )
-        session.add(location)
+def create_location(location_data, user):
+    return Location(
+        latitude=location_data['latitude'],
+        longitude=location_data['longitude'],
+        city=location_data['city'],
+        country=location_data['country'],
+        user_id=user.id
+    )
 
-        device_data = data.get('device_info', {})
-        device_info = DeviceInfo(
-            user_id=user.id,
-            os=device_data.get('os'),
-            browser=device_data.get('browser')
-        )
-        session.add(device_info)
+def create_device_info(device_data, user):
+    return DeviceInfo(
+        browser=device_data['browser'],
+        os=device_data['os'],
+        user_id=user.id
+    )
 
-        sentences = data.get('sentences', [])
-        if sen == "h":
-            for sentence_text in sentences:
-                sentence = HostageSentence(user_id=user.id, sentence_text=sentence_text)
-                session.add(sentence)
+def process_sentences(sentences, user):
+    for i, sentence in enumerate(sentences):
+        if 'explos' in sentence:
+            explosive_sentence = ExplosiveSentence(sentence_text=sentence, user_id=user.id)
+            user.explosive_sentences.append(explosive_sentence)
 
-        if sen == "e":
-            for sentence_text in sentences:
-                sentence = ExplosiveSentence(user_id=user.id, sentence_text=sentence_text)
-                session.add(sentence)
-        session.commit()
+            for next_sentence in sentences[i + 1:i + 3]:
+                user.explosive_sentences.append(ExplosiveSentence(sentence_text=next_sentence, user_id=user.id))
 
+        elif 'hostage' in sentence:
+            hostage_sentence = HostageSentence(sentence_text=sentence, user_id=user.id)
+            user.hostage_sentences.append(hostage_sentence)
 
-def json_serializer(obj):
-    if isinstance(obj, ObjectId):
-        return str(obj)
-    raise TypeError(f"Object of type {type(obj).__name__} is not JSON serializable")
+            for next_sentence in sentences[i + 1:i + 3]:
+                user.hostage_sentences.append(HostageSentence(sentence_text=next_sentence, user_id=user.id))
+
