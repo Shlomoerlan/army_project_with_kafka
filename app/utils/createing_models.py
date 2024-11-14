@@ -1,3 +1,5 @@
+from bson import ObjectId
+
 from app.db.database_psql import session_maker
 from app.db.models import User, Location, DeviceInfo, HostageSentence, ExplosiveSentence
 
@@ -44,4 +46,7 @@ def insert_user_data(data: dict, sen: str):
         session.commit()
 
 
-
+def json_serializer(obj):
+    if isinstance(obj, ObjectId):
+        return str(obj)
+    raise TypeError(f"Object of type {type(obj).__name__} is not JSON serializable")
