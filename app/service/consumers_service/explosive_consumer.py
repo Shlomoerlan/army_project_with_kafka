@@ -19,8 +19,7 @@ def consume_explosive():
         auto_offset_reset='earliest'
     )
     for msg in consumer:
-        print(msg)
-        # process_to_sql(msg.value)
+        process_to_sql(msg.value)
 
 if __name__ == '__main__':
     consume_explosive()

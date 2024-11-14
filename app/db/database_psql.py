@@ -1,5 +1,5 @@
 from dotenv import load_dotenv
-from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy.orm import sessionmaker
 from app.db.models import Base
 from sqlalchemy import create_engine
 from app.db.models import User, Location, DeviceInfo, ExplosiveSentence, HostageSentence
@@ -13,8 +13,7 @@ session_maker = sessionmaker(bind=engine)
 def init_db():
     Base.metadata.drop_all(engine)
     Base.metadata.create_all(engine)
-    with session_maker() as session:
-        session.commit()
+
 
 
 
