@@ -1,8 +1,7 @@
-from flask import Flask
-
-app = Flask(__name__)
-
+from app.db.database_psql import init_db
+from app.routes.get_data import app
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    init_db()
+    app.run()

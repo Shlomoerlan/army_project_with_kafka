@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from app.service.producers_service.all_messages_producer import publish_message
+from app.utils.selector import selector
 
 app = Flask(__name__)
 
@@ -9,9 +9,9 @@ def receive_email():
     data = request.json
     if data is None:
         return jsonify({"error": "Invalid JSON data"}), 400
-    success = publish_message(data)
+    selector(data)
     return jsonify({
-        "status": f"Message received {success} rows",
+        "status": f"Message received",
     }), 200
 
 
