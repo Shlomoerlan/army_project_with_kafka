@@ -1,9 +1,12 @@
 import os
 from dotenv import load_dotenv
+from flask import Flask
+
 from app.service.producers_service import producer
 
-load_dotenv(verbose=True)
+app = Flask(__name__)
 
+load_dotenv(verbose=True)
 
 def publish_explosive(data):
     data = field_the_data(data)
@@ -17,3 +20,5 @@ def field_the_data(data):
     data['sentences'].insert(0, d)
     return data
 
+if __name__ == '__main__':
+    app.run()

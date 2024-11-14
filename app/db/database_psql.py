@@ -2,7 +2,6 @@ from dotenv import load_dotenv
 from sqlalchemy.orm import sessionmaker, Session
 from app.db.models import Base
 from sqlalchemy import create_engine
-import os
 from app.db.models import User, Location, DeviceInfo, ExplosiveSentence, HostageSentence
 from app.settings.config import DB_URL
 
